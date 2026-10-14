@@ -4,50 +4,48 @@ import axios from "axios";
 
 export default class IdDoctorComponent extends Component {
     url = Global.urlApiDoctores;
-
     state = {
-        doctor: null,
-    };
-
-    detalleDoctor = () => {
-        let idDoctor = this.props.idDoctor;
-        let Request = "/api/Doctores/" + idDoctor;
-        axios.get(this.urlApiDoctores + Request).then((response) => {
-        console.log("leyendo doctor");
-        this.setState({
-            doctor: response.data,
-        });
-        });
-    };
-
+        doctor: null
+    }
+    findDoctor = () => {
+        let request = "api/doctores/" + this.props.iddoctor;
+        axios.get(this.url + request).then((response) => {
+            console.log("Find doctor");
+            this.setState({
+                doctor: response.data
+            })
+        })
+    }
     componentDidMount = () => {
-        console.log("Id doctor:" + this.props.idDoctor);
-        this.detalleDoctor();
-    };
-
+        this.findDoctor();
+    }
     componentDidUpdate = (oldProps) => {
-        console.log("Current: " + this.props.idDoctor);
-        console.log("Old: " + oldProps.idDoctor);
-        if (this.props.idDoctor != oldProps.idDoctor) {
-        this.detalleDoctor();
+        if (oldProps.iddoctor != this.props.iddoctor){
+            this.findDoctor();
         }
-    };
-
+    }
     render() {
         return (
-        <div>
-            <h1>Detalle Medico</h1>
-            {this.state.dcotor && (
             <div>
-                <h3>
-                {this.state.doctor.apellido} {this.state.doctor.Urología}
-                </h3>
-                <h3>{this.state.doctor.especialidad}</h3>
-                <h3>{this.state.doctor.idHospital}</h3>
-                <h3>{this.state.doctor.salario}</h3>
+                <h1>Detalles Doctor</h1>
+                {
+                    this.state.doctor &&
+                    (<ul className="list-group">
+                        <li className="list-group-item">
+                            Apellido: {this.state.doctor.apellido}
+                        </li>
+                        <li className="list-group-item">
+                            Especialidad: {this.state.doctor.especialidad}
+                        </li>                        
+                        <li className="list-group-item">
+                            Salario: {this.state.doctor.salario}
+                        </li>                        
+                        <li className="list-group-item">
+                            Hospital: {this.state.doctor.idHospital}
+                        </li>                        
+                    </ul>)
+                }
             </div>
-            )}
-        </div>
-        );
+        )
     }
-    }
+}
